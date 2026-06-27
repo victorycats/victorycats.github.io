@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>victorycats ｜ Web道具箱</title>
+<meta name="description" content="ブラウザだけで動く Web ツールの入口。ふたばお習字とサンバースト・コンポーザー。">
+<meta name="theme-color" content="#C5392B">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yuji+Syuku&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --washi:#F1EBDD;
+    --washi-deep:#E7DCC4;
+    --washi-line:#D8CCB0;
+    --sumi:#211C17;
+    --sumi-soft:#6A5F50;
+    --shu:#C5392B;
+    --shu-deep:#A22A1E;
+    --ai:#3A576C;
+    --ai-deep:#26404F;
+    --kohaku:#DD9326;
+    --kohaku-deep:#B6731A;
+    --r:18px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  html{-webkit-text-size-adjust:100%}
+
+  body{
+    font-family:"Zen Kaku Gothic New",system-ui,sans-serif;
+    color:var(--sumi);
+    background-color:var(--washi);
+    background-image:
+      radial-gradient(circle at 18% 22%, rgba(255,255,255,.55), transparent 40%),
+      radial-gradient(circle at 82% 78%, rgba(197,57,43,.05), transparent 45%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:clamp(28px,6vw,72px) 20px;
+    line-height:1.7;
+  }
+
+  .wrap{width:100%;max-width:880px;display:flex;flex-direction:column}
+
+  /* ---------- hero ---------- */
+  .hero{
+    display:flex;
+    align-items:center;
+    gap:clamp(18px,4vw,40px);
+    padding-bottom:clamp(26px,5vw,40px);
+    border-bottom:1.5px solid var(--washi-line);
+  }
+  .seal{
+    flex:0 0 auto;
+    width:clamp(84px,20vw,112px);
+    height:clamp(84px,20vw,112px);
+    transform-origin:60% 60%;
+    animation:press .7s cubic-bezier(.2,1.4,.4,1) both;
+    filter:drop-shadow(2px 3px 0 rgba(162,42,30,.18));
+  }
+  @keyframes press{
+    0%{opacity:0;transform:scale(1.5) rotate(-9deg)}
+    55%{opacity:1;transform:scale(.93) rotate(2deg)}
+    100%{opacity:1;transform:scale(1) rotate(0)}
+  }
+  .titles{min-width:0}
+  .eyebrow{
+    font-family:"Space Mono",monospace;
+    font-size:clamp(11px,2.4vw,13px);
+    letter-spacing:.16em;
+    color:var(--shu-deep);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:6px;
+  }
+  .eyebrow::before{content:"";width:18px;height:1.5px;background:var(--shu)}
+  .brushword{
+    font-family:"Yuji Syuku",serif;
+    font-size:clamp(38px,9vw,64px);
+    line-height:1.02;
+    letter-spacing:.04em;
+    color:var(--sumi);
+  }
+  .brushword .em{color:var(--shu);position:relative}
+  .sub{
+    margin-top:10px;
+    font-size:clamp(13px,2.8vw,15px);
+    color:var(--sumi-soft);
+    max-width:34em;
+  }
+  .sub b{color:var(--sumi);font-weight:700}
+
+  /* ---------- cards ---------- */
+  .lead{
+    font-family:"Space Mono",monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--sumi-soft);
+    text-transform:uppercase;
+    margin:clamp(26px,5vw,38px) 0 14px;
+  }
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,3vw,20px)}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+
+  .card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    text-decoration:none;
+    color:inherit;
+    background:var(--washi);
+    border:1.5px solid var(--washi-line);
+    border-radius:var(--r);
+    padding:clamp(20px,3.4vw,28px);
+    overflow:hidden;
+    isolation:isolate;
+    transition:transform .28s cubic-bezier(.2,.8,.3,1), box-shadow .28s, border-color .28s;
+  }
+  .card::after{ /* the colored accent edge */
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:var(--accent);transition:width .28s;
+  }
+  .card:hover,.card:focus-visible{
+    transform:translateY(-4px);
+    box-shadow:0 16px 30px -16px rgba(33,28,23,.4);
+    border-color:var(--accent);
+    outline:none;
+  }
+  .card:hover::after,.card:focus-visible::after{width:8px}
+  .card:focus-visible{box-shadow:0 0 0 3px var(--washi),0 0 0 5px var(--accent)}
+
+  .card .badge{
+    align-self:flex-start;
+    font-family:"Space Mono",monospace;
+    font-size:11px;
+    letter-spacing:.08em;
+    color:#fff;
+    background:var(--accent);
+    padding:3px 9px;
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  .card h2{
+    font-family:"Yuji Syuku",serif;
+    font-weight:400;
+    font-size:clamp(22px,4.6vw,28px);
+    letter-spacing:.03em;
+    line-height:1.2;
+    margin-bottom:10px;
+  }
+  .sunburst h2{line-height:1.55}
+  .sunburst rt{
+    font-family:"Zen Kaku Gothic New",sans-serif;
+    font-size:10.5px;font-weight:500;letter-spacing:.06em;
+    color:var(--kohaku-deep);
+    transform:translateY(2px);
+  }
+  .card p{
+    font-size:14px;
+    color:var(--sumi-soft);
+    margin-bottom:18px;
+  }
+
+  /* spec block (shortcuts / features) */
+  .spec{margin-bottom:20px;flex:1}
+  .spec-label{
+    font-family:"Space Mono",monospace;
+    font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:11px;
+    display:flex;align-items:center;gap:7px;
+  }
+  .spec-label::before{content:"";width:14px;height:2px;background:var(--accent)}
+  .keys{list-style:none;display:flex;flex-wrap:wrap;gap:8px 9px}
+  .keys li{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--sumi-soft)}
+  kbd{
+    font-family:"Space Mono",monospace;font-size:11px;color:var(--sumi);
+    background:var(--washi-deep);border:1px solid var(--washi-line);
+    border-bottom-width:2px;border-radius:5px;padding:1px 6px;line-height:1.5;
+  }
+  .feat{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .feat li{position:relative;padding-left:16px;font-size:13px;color:var(--sumi-soft)}
+  .feat li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  .card .go{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:12px;padding-top:14px;border-top:1px dashed var(--washi-line);
+  }
+  .card .path{
+    font-family:"Space Mono",monospace;
+    font-size:12px;
+    color:var(--sumi);
+    word-break:break-all;
+  }
+  .card .arrow{
+    flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+    display:grid;place-items:center;
+    background:var(--accent);color:#fff;font-size:15px;
+    transition:transform .28s;
+  }
+  .card:hover .arrow,.card:focus-visible .arrow{transform:translateX(4px)}
+
+  /* お習字 = indigo ink */
+  .card.shuji{--accent:var(--ai)}
+  .card.shuji .inkstroke{
+    position:absolute;right:-12%;bottom:-18%;width:62%;z-index:-1;
+    opacity:.1;color:var(--ai-deep);pointer-events:none;
+  }
+
+  /* サンバースト = amber rays */
+  .card.sunburst{--accent:var(--kohaku)}
+  .card.sunburst .rays{
+    position:absolute;right:-30%;top:-40%;width:90%;z-index:-1;
+    opacity:.14;color:var(--kohaku);pointer-events:none;
+    transform-origin:center;
+    animation:spin 60s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- footer ---------- */
+  footer{
+    margin-top:clamp(34px,6vw,52px);
+    padding-top:22px;
+    border-top:1.5px solid var(--washi-line);
+    display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 11px;
+    font-size:12.5px;color:var(--sumi-soft);
+  }
+  footer .mark{
+    font-family:"Yuji Syuku",serif;font-size:16px;color:var(--sumi);letter-spacing:.05em;
+  }
+  footer .fyear{font-family:"Space Mono",monospace;letter-spacing:.08em}
+  footer .bar{color:var(--washi-line)}
+  footer .ver{font-family:"Space Mono",monospace;letter-spacing:.06em;color:var(--shu-deep)}
+
+  @media(max-width:620px){
+    .hero{flex-direction:column;align-items:flex-start;gap:16px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .seal{animation:none}
+    .card.sunburst .rays{animation:none}
+    *{transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+
+    <header class="hero">
+      <!-- 招き猫の朱印 = victorycats の落款 -->
+      <svg class="seal" viewBox="0 0 100 100" role="img" aria-label="victorycats の朱印">
+        <rect x="4" y="4" width="92" height="92" rx="10" fill="var(--shu)"/>
+        <rect x="4" y="4" width="92" height="92" rx="10" fill="none" stroke="var(--shu-deep)" stroke-width="2.5"/>
+        <g fill="var(--washi)">
+          <!-- ears -->
+          <path d="M31 31 L28 15 L45 27 Z"/>
+          <path d="M69 31 L72 15 L55 27 Z"/>
+          <!-- head / body -->
+          <path d="M50 23 C32 23 25 38 25 55 C25 73 35 84 50 84 C65 84 75 73 75 55 C75 38 68 23 50 23 Z"/>
+          <!-- raised right paw (招き) -->
+          <path d="M66 53 Q79 45 85 31" fill="none" stroke="var(--washi)" stroke-width="11" stroke-linecap="round"/>
+          <circle cx="86" cy="29" r="7"/>
+        </g>
+        <g fill="var(--shu)">
+          <!-- eyes -->
+          <circle cx="41" cy="51" r="3.1"/>
+          <circle cx="59" cy="51" r="3.1"/>
+          <!-- whiskery smile -->
+          <path d="M50 57 q-3.6 4 -7.5 .8 M50 57 q3.6 4 7.5 .8" stroke="var(--shu)" stroke-width="1.9" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+
+      <div class="titles">
+        <h1 class="brushword">Web<span class="em">道具箱</span></h1>
+        <p class="sub">下のカードから、各ツールへどうぞ。</p>
+      </div>
+    </header>
+
+    <p class="lead">// 道具一覧</p>
+
+    <div class="grid">
+
+      <a class="card shuji" href="/site-board/">
+        <svg class="inkstroke" viewBox="0 0 100 100" aria-hidden="true"><path d="M12 70 C30 30 55 80 88 38" stroke="currentColor" stroke-width="14" fill="none" stroke-linecap="round"/></svg>
+        <span class="badge">site-board</span>
+        <h2>ふたば(偽)お習字</h2>
+        <p>文字でもラクガキでも気軽に書いて／描いて貼れるボード。タイトル通り、あの企画のインスパイア系です。</p>
+        <div class="spec">
+          <p class="spec-label">半紙(キャンバス)ショートカット</p>
+          <ul class="keys">
+            <li><kbd>[</kbd><kbd>]</kbd>太さ</li>
+            <li><kbd>B</kbd>筆先</li>
+            <li><kbd>P</kbd><kbd>E</kbd>黒・白</li>
+            <li><kbd>1</kbd>–<kbd>7</kbd>色</li>
+            <li><kbd>G</kbd>塗り</li>
+            <li><kbd>;</kbd>拡大</li>
+            <li><kbd>N</kbd>名前欄</li>
+            <li><kbd>Delete</kbd>全消し</li>
+          </ul>
+        </div>
+        <span class="go">
+          <span class="path">/site-board/</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+
+      <a class="card sunburst" href="/app-sunburst/">
+        <svg class="rays" viewBox="0 0 100 100" aria-hidden="true"><g fill="currentColor"><path d="M50 50 L50 0 L57 0 Z"/><path d="M50 50 L100 50 L100 57 Z"/><path d="M50 50 L50 100 L43 100 Z"/><path d="M50 50 L0 50 L0 43 Z"/><path d="M50 50 L85 15 L90 20 Z"/><path d="M50 50 L85 85 L80 90 Z"/><path d="M50 50 L15 85 L10 80 Z"/><path d="M50 50 L15 15 L20 10 Z"/></g></svg>
+        <span class="badge">app-sunburst</span>
+        <h2><ruby>例の画像生成器<rt>サンバースト・コンポーザー</rt></ruby></h2>
+        <p>手持ちの画像を切り抜いて、例の背景にMIXできる画像処理ツール。</p>
+        <div class="spec">
+          <p class="spec-label">できること</p>
+          <ul class="feat">
+            <li>マケドニア背景の生成</li>
+            <li>画像・ロゴの重ね合わせと配置</li>
+            <li>影と押し出しのレイヤー効果</li>
+            <li>ロゴの白／黒インク下地</li>
+            <li>Undo・Redo（30手まで）</li>
+          </ul>
+        </div>
+        <span class="go">
+          <span class="path">/app-sunburst/</span>
+          <span class="arrow" aria-hidden="true">→</span>
+        </span>
+      </a>
+
+    </div>
+
+    <footer>
+      <span class="mark">victorycats</span>
+      <span class="fyear">2026</span>
+      <span class="bar" aria-hidden="true">|</span>
+      <span class="ver">v1.0</span>
+    </footer>
+
+  </main>
+</body>
+</html>
