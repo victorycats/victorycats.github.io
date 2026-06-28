@@ -166,10 +166,11 @@
     font-size:14px;
     color:var(--sumi-soft);
     margin-bottom:18px;
+    flex:1;
   }
 
   /* spec block (shortcuts / features) */
-  .spec{margin-bottom:20px;flex:1}
+  .spec{margin-bottom:20px}
   .spec-label{
     font-family:"Space Mono",monospace;
     font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
@@ -179,6 +180,8 @@
   .spec-label::before{content:"";width:14px;height:2px;background:var(--accent)}
   .keys{list-style:none;display:flex;flex-wrap:wrap;gap:8px 9px}
   .keys li{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--sumi-soft)}
+  .spec-sub{margin-top:14px}
+  .spec-sub .spec-label{margin-bottom:11px}
   kbd{
     font-family:"Space Mono",monospace;font-size:11px;color:var(--sumi);
     background:var(--washi-deep);border:1px solid var(--washi-line);
@@ -292,15 +295,25 @@
         <div class="spec">
           <p class="spec-label">半紙(キャンバス)ショートカット</p>
           <ul class="keys">
-            <li><kbd>[</kbd><kbd>]</kbd>太さ</li>
-            <li><kbd>B</kbd>筆先</li>
-            <li><kbd>P</kbd><kbd>E</kbd>黒・白</li>
-            <li><kbd>1</kbd>–<kbd>7</kbd>色</li>
-            <li><kbd>G</kbd>塗り</li>
+            <li><kbd>[</kbd><kbd>]</kbd>線を細く／太く</li>
+            <li><kbd>B</kbd><kbd>O</kbd>ペン先変更／縦横切替</li>
+            <li><kbd>P</kbd><kbd>E</kbd>黒／白</li>
+            <li><kbd>1</kbd>–<kbd>7</kbd>パレット</li>
+            <li><kbd>G</kbd>塗りつぶし</li>
             <li><kbd>;</kbd>拡大</li>
-            <li><kbd>N</kbd>名前欄</li>
-            <li><kbd>Delete</kbd>全消し</li>
+            <li><kbd>Del</kbd>消す</li>
+            <li><kbd>S</kbd><kbd>Z</kbd>貼る／ひとつ戻す</li>
+            <li><kbd>N</kbd><kbd>R</kbd>名前欄／レイアウト</li>
           </ul>
+          <div class="spec-sub">
+            <p class="spec-label">いつでも</p>
+            <ul class="keys">
+              <li><kbd>H</kbd><kbd>I</kbd>半紙の開閉／ヘルプ</li>
+              <li><kbd>F</kbd>お題枠を予約</li>
+              <li><kbd>←</kbd><kbd>→</kbd>半紙めぐり</li>
+              <li><kbd>+</kbd><kbd>-</kbd>ズーム</li>
+            </ul>
+          </div>
         </div>
         <span class="go">
           <span class="path">/site-board/</span>
